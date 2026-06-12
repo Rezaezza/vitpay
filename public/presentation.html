@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitPay - Technical Docs & Presentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* CSS SETUP */
+        * { box-sizing: border-box; }
+        body {
+            background-color: #09090b; 
+            display: grid;
+            gap: 40px;
+            grid-template-columns: 1fr;
+            margin: 0;
+            padding: 40px 0;
+            place-items: center;
+        }
+
+        .slide-container {
+            background-color: #18181b; 
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            font-family: "DM Sans", sans-serif;
+            height: 720px;
+            overflow: hidden;
+            padding: 60px;
+            position: relative;
+            width: 1280px;
+        }
+
+        /* BACKGROUND DECORATIONS */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 90% 10%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+            z-index: 0;
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3, p, li { position: relative; z-index: 1; }
+        h1, h2, h3 { color: #f4f4f5; font-family: "DM Sans", sans-serif; font-weight: 700; margin: 0; }
+        h1 { font-size: 80px; line-height: 1.1; color: #fff; }
+        .slide-title { font-size: 40px; margin-bottom: 40px; letter-spacing: 1px; border-left: 6px solid #06b6d4; padding-left: 20px; }
+        p, li { font-size: 20px; color: #a1a1aa; line-height: 1.6; }
+        .subtitle { font-size: 24px; color: #06b6d4; margin-top: 20px; }
+
+        /* LAYOUTS */
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; z-index: 1; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; width: 100%; align-items: center; }
+        .tiled-content { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; width: 100%; }
+        
+        .tile { 
+            background: rgba(39, 39, 42, 0.5); 
+            padding: 40px; 
+            border-radius: 16px; 
+            border: 1px solid #3f3f46; 
+            border-bottom: 4px solid #06b6d4; 
+            text-align: center; 
+        }
+        .tile i { font-size: 48px; color: #06b6d4; margin-bottom: 20px; }
+        
+        .highlight-number { font-size: 120px; font-weight: 700; color: #fff; line-height: 1; margin: 0; }
+        .number-label { font-size: 24px; font-weight: 700; color: #06b6d4; text-transform: uppercase; }
+
+        /* IMAGES */
+        .image-wrapper { 
+            border-radius: 20px; 
+            overflow: hidden; 
+            border: 1px solid #3f3f46; 
+            height: 400px; 
+            position: relative;
+        }
+        .image-wrapper img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .image-wrapper::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(24,24,27,0.8), transparent);
+        }
+
+        .bullet-list { list-style: none; padding: 0; }
+        .bullet-list li { position: relative; padding-left: 45px; margin-bottom: 25px; }
+        .bullet-list li i { position: absolute; left: 0; top: 5px; color: #06b6d4; font-size: 24px; }
+
+        table { width: 100%; border-collapse: collapse; background: rgba(39, 39, 42, 0.3); border-radius: 12px; overflow: hidden; }
+        th { background: rgba(39, 39, 42, 0.8); color: #fff; padding: 20px; text-align: left; }
+        td { padding: 20px; border-bottom: 1px solid #3f3f46; color: #d4d4d8; }
+
+        /* TIMELINE */
+        .timeline-layout { display: flex; justify-content: space-between; position: relative; padding-top: 100px; }
+        .timeline-line { position: absolute; top: 110px; left: 0; width: 100%; height: 2px; background: #3f3f46; }
+        .timeline-item { width: 30%; position: relative; text-align: center; }
+        .timeline-dot { width: 20px; height: 20px; background: #06b6d4; border-radius: 50%; position: absolute; top: -110px; left: 50%; transform: translateX(-50%); box-shadow: 0 0 15px #06b6d4; }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+    <div class="content-area" style="text-align: center;">
+        <i class="fa-solid fa-shield-halved" style="font-size: 80px; color: #06b6d4; margin-bottom: 30px;"></i>
+        <h1>VITPAY</h1>
+        <p class="subtitle">Confidential Payroll Protocol on Arc Blockchain</p>
+        <div style="height: 2px; width: 100px; background: #3f3f46; margin: 40px auto;"></div>
+        <p style="font-weight: 700; color: #52525b; letter-spacing: 2px;">TECHNICAL DOCUMENTATION & PITCH DECK</p>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">The Transparency Trap</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <i class="fa-solid fa-eye-slash"></i>
+                <h3 style="margin-bottom: 15px;">Data Exposure</h3>
+                <p>Public blockchains expose sensitive salary data, creating competitive and internal risks.</p>
+            </div>
+            <div class="tile">
+                <i class="fa-solid fa-clock"></i>
+                <h3 style="margin-bottom: 15px;">Settlement Latency</h3>
+                <p>Traditional finance takes days to settle payrolls across international borders.</p>
+            </div>
+            <div class="tile">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <h3 style="margin-bottom: 15px;">Cost Volatility</h3>
+                <p>Volatile crypto gas fees make corporate financial budgeting impossible.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Built on Arc Network</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div style="text-align: center; background: rgba(39,39,42,0.5); padding: 40px; border-radius: 20px; border: 1px solid #3f3f46;">
+                <p class="highlight-number" style="font-size: 80px;">5042002</p>
+                <p class="number-label" style="margin-top: 10px;">Chain ID: Arc Testnet</p>
+            </div>
+            <div>
+                <ul class="bullet-list">
+                    <li><i class="fa-solid fa-bolt"></i> <strong>Sub-second Finality:</strong> Malachite consensus ensures instant settlement.</li>
+                    <li><i class="fa-solid fa-dollar-sign"></i> <strong>USDC Native Gas:</strong> Predictable, dollar-denominated transaction costs.</li>
+                    <li><i class="fa-solid fa-building-shield"></i> <strong>Enterprise Ready:</strong> Purpose-built for stablecoin-native finance.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Privacy at Scale (Keccak256)</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3 style="font-size: 28px; margin-bottom: 20px;">Zero-Knowledge Concept</h3>
+                <p>VitPay obscures sensitive data using a one-way cryptographic hash combined with a unique secret salt. Attackers cannot brute-force the salary amounts.</p>
+                <div style="background: #09090b; padding: 20px; border-radius: 12px; border: 1px solid #3f3f46; margin-top: 30px; font-family: monospace; color: #06b6d4;">
+                    Hash = Keccak256( Wallet + Amount + Salt )
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80" alt="Blockchain Security">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Full-Stack Architecture</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile" style="border-bottom-color: #8b5cf6;">
+                <i class="fa-brands fa-react" style="color: #8b5cf6;"></i>
+                <h3 style="margin-bottom: 15px;">Frontend</h3>
+                <p>Next.js 15 & Tailwind v4 for a premium, high-performance UI.</p>
+            </div>
+            <div class="tile" style="border-bottom-color: #f59e0b;">
+                <i class="fa-solid fa-link" style="color: #f59e0b;"></i>
+                <h3 style="margin-bottom: 15px;">Middleware</h3>
+                <p>Ethers.js v6 for robust interaction with EVM smart contracts.</p>
+            </div>
+            <div class="tile" style="border-bottom-color: #10b981;">
+                <i class="fa-solid fa-scroll" style="color: #10b981;"></i>
+                <h3 style="margin-bottom: 15px;">On-Chain</h3>
+                <p>Solidity Smart Contracts deployed on Arc for final execution.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">The Payroll Engine</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <p style="margin-bottom: 20px;">Our secure distribution engine manages the complex workflow of stablecoin finance seamlessly:</p>
+                <ol style="font-size: 20px; color: #a1a1aa; padding-left: 20px; line-height: 2;">
+                    <li><strong style="color: #fff;">Connect:</strong> Auto-detect Arc Network via MetaMask.</li>
+                    <li><strong style="color: #fff;">Approve:</strong> Standard ERC-20 USDC Token Approval.</li>
+                    <li><strong style="color: #fff;">Hash:</strong> Local Keccak256 Encryption in Browser.</li>
+                    <li><strong style="color: #fff;">Settle:</strong> Sub-second Contract Execution.</li>
+                </ol>
+            </div>
+            <div class="image-wrapper">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Financial Dashboard">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Zero-Knowledge Auditing</h2>
+    <div class="content-area">
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Traditional Web3</th>
+                    <th style="color: #06b6d4;">VitPay Protocol</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Salary Privacy</td>
+                    <td>Exposed to Public</td>
+                    <td style="color: #fff; font-weight: bold;">Cryptographically Shielded</td>
+                </tr>
+                <tr>
+                    <td>Compliance</td>
+                    <td>Manual Reporting</td>
+                    <td style="color: #fff; font-weight: bold;">Automated Privacy Logs</td>
+                </tr>
+                <tr>
+                    <td>Verification</td>
+                    <td>Trust-based / Oral</td>
+                    <td style="color: #fff; font-weight: bold;">Mathematical Proof (Hash Check)</td>
+                </tr>
+                <tr>
+                    <td>Employee Status</td>
+                    <td>Off-chain Database</td>
+                    <td style="color: #fff; font-weight: bold;">On-chain Ledger Validation</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Strategic Roadmap</h2>
+    <div class="content-area">
+        <div class="timeline-layout">
+            <div class="timeline-line"></div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h3 style="margin-bottom: 10px; margin-top: 20px;">Q3 2026</h3>
+                <p style="font-size: 16px;">Arc Mainnet Launch & Public Deployment</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h3 style="margin-bottom: 10px; margin-top: 20px;">Q4 2026</h3>
+                <p style="font-size: 16px;">Cross-chain USDC Liquidity Aggregation</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h3 style="margin-bottom: 10px; margin-top: 20px;">Q1 2027</h3>
+                <p style="font-size: 16px;">AI-Agentic Autonomous Payroll Systems</p>
+            </div>
+        </div>
+        <div class="image-wrapper" style="height: 250px; margin-top: 60px;">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" alt="Network Future">
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Target Market & Use Cases</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile" style="border-bottom-color: #ec4899;">
+                <i class="fa-solid fa-globe" style="color: #ec4899;"></i>
+                <h3 style="margin-bottom: 15px;">Remote Web3 Teams</h3>
+                <p>Borderless, instant salary distribution for global contributors without exposing individual compensation.</p>
+            </div>
+            <div class="tile" style="border-bottom-color: #3b82f6;">
+                <i class="fa-solid fa-building-columns" style="color: #3b82f6;"></i>
+                <h3 style="margin-bottom: 15px;">Enterprise DAOs</h3>
+                <p>Manage treasury outflows transparently while maintaining strict privacy for core team members.</p>
+            </div>
+            <div class="tile" style="border-bottom-color: #f97316;">
+                <i class="fa-solid fa-briefcase" style="color: #f97316;"></i>
+                <h3 style="margin-bottom: 15px;">Freelance Agencies</h3>
+                <p>Protect client and contractor payment confidentiality from competitors analyzing on-chain data.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Stablecoin-Native Economy</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3 style="font-size: 28px; margin-bottom: 20px;">Why USDC on Arc?</h3>
+                <ul class="bullet-list" style="margin-bottom: 30px;">
+                    <li><i class="fa-solid fa-money-bill-trend-up"></i> <strong>Zero Volatility Risk:</strong> Employees receive exact dollar value, immune to crypto market crashes.</li>
+                    <li><i class="fa-solid fa-gas-pump"></i> <strong>Predictable Gas:</strong> Transaction fees are calculated in stablecoins, easing corporate accounting.</li>
+                    <li><i class="fa-solid fa-bridge-water"></i> <strong>Deep Liquidity:</strong> Easy off-ramp to local fiat currencies globally.</li>
+                </ul>
+            </div>
+            <div class="image-wrapper">
+                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80" alt="Stablecoin Economy">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Enterprise Security</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div style="text-align: center; background: rgba(39,39,42,0.5); padding: 40px; border-radius: 20px; border: 1px solid #3f3f46;">
+                <i class="fa-solid fa-user-shield" style="font-size: 80px; color: #ef4444; margin-bottom: 20px;"></i>
+                <h3 style="color: #ef4444; margin-bottom: 10px;">Admin-Only Execution</h3>
+                <p style="font-size: 16px;">Only the registered Employer/Admin wallet can trigger the <code style="color:#06b6d4;">paySalary</code> and <code style="color:#06b6d4;">updateEmployeeStatus</code> functions.</p>
+            </div>
+            <div>
+                <ul class="bullet-list">
+                    <li><i class="fa-solid fa-ban"></i> <strong>Replay Protection:</strong> Transactions are strictly bound to Arc Chain ID.</li>
+                    <li><i class="fa-solid fa-user-minus"></i> <strong>Dynamic Revocation:</strong> Inactive employees are instantly blocked from receiving funds.</li>
+                    <li><i class="fa-solid fa-file-contract"></i> <strong>Immutable Logic:</strong> Core distribution logic cannot be tampered with once deployed.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <div class="content-area" style="text-align: center;">
+        <h2 style="font-size: 60px; color: #fff; margin-bottom: 20px;">The Future of Payroll is Here</h2>
+        <p style="font-size: 24px; color: #a1a1aa; max-width: 600px; margin: 0 auto 40px auto;">
+            Built and deployed on Arc Testnet for secure, borderless, and confidential corporate settlements.
+        </p>
+        <div style="background: rgba(6, 184, 212, 0.1); border: 1px solid rgba(6, 184, 212, 0.3); padding: 30px; border-radius: 16px; display: inline-block; min-width: 400px;">
+            <p style="font-weight: 700; color: #06b6d4; margin-bottom: 20px; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">Explore The Protocol</p>
+            
+            <p style="color: #f4f4f5; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fa-brands fa-x-twitter" style="color: #06b6d4; font-size: 20px;"></i> 
+                <a href="https://x.com/vitpay_arc" target="_blank" rel="noopener noreferrer" style="color: #f4f4f5; text-decoration: none; cursor: pointer;">@VitPay_Arc</a>
+            </p>
+            
+            <p style="color: #f4f4f5; font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fa-solid fa-envelope" style="color: #06b6d4; font-size: 20px;"></i> 
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=vitpayarc@gmail.com" target="_blank" rel="noopener noreferrer" style="color: #f4f4f5; text-decoration: none;">vitpayarc@gmail.com</a>
+            </p>
+        </div>
+        <p style="color: #52525b; margin-top: 60px; font-weight: bold; letter-spacing: 1px;">POWERED BY CIRCLE & ARC NETWORK</p>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

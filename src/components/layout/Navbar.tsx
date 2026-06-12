@@ -1,7 +1,8 @@
+// FILE: src/component/layout/Navbar.tsx
 "use client";
 
 import { useState } from "react";
-import { Bell, Wallet, Loader2, LogOut, Copy, Check } from "lucide-react";
+import { Wallet, Loader2, LogOut, Copy, Check } from "lucide-react";
 import { useWallet } from "@/providers/WalletProvider";
 
 export default function Navbar() { 
@@ -24,27 +25,20 @@ export default function Navbar() {
   };
 
   return (
-    <header className="h-20 glass-panel border-b border-zinc-800/50 sticky top-0 z-40 flex items-center justify-between px-8">
-      {/* Bagian Kiri: Judul */}
-      <div>
-        <h2 className="text-lg font-semibold text-zinc-100 leading-none mb-1">Confidential Payroll</h2>
-        <p className="text-xs text-zinc-500">Secure & encrypted salary distributions on Arc</p>
-      </div>
-
+    <header className="h-20 glass-panel border-b border-zinc-800/50 sticky top-0 z-40 flex items-center justify-end px-8">
+      
       {/* Bagian Kanan: Actions */}
       <div className="flex items-center gap-4">
-        {/* Notifikasi */}
-        <button className="p-2.5 rounded-full bg-zinc-900/50 text-zinc-400 hover:text-zinc-100 transition-colors border border-zinc-800/50">
-          <Bell size={18} />
-        </button>
         
         {/* State: Terkoneksi */}
         {isConnected && address ? (
           <div className="flex items-center gap-1 bg-zinc-900/80 p-1 rounded-xl border border-zinc-800 shadow-inner">
-            {/* Tombol Copy & Tampilan Address */}
+            
+            {/* Tombol Copy & Tampilan Address Digabung (Lebih Minimalis) */}
             <button 
               onClick={handleCopyAddress}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-zinc-300 hover:bg-zinc-800 transition-all active:scale-95 font-medium"
+              title="Copy Wallet Address"
             >
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span>{formatAddress(address)}</span>
@@ -58,7 +52,7 @@ export default function Navbar() {
             {/* Pembatas */}
             <div className="w-[1px] h-5 bg-zinc-800 mx-1" />
 
-            {/* TOMBOL DISCONNECT (Ikon Keluar) */}
+            {/* TOMBOL DISCONNECT */}
             <button
               onClick={disconnectWallet}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all active:scale-95"

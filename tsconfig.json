@@ -13,20 +13,16 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-
     "baseUrl": ".",
-
     "plugins": [
       {
         "name": "next"
       }
     ],
-
     "paths": {
       "@/*": ["src/*"]
     }
   },
-
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -35,6 +31,14 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "vitpay-contract",
+    "hardhat.config.ts",
+    "scripts",
+    "test",
+    "contracts",
+    "ignition",
+    "typechain-types"
+  ]
 }
