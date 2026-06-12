@@ -155,18 +155,53 @@
 </div>
 
 <div class="slide-container">
-    <h2 class="slide-title">Privacy at Scale (Keccak256)</h2>
     <div class="content-area">
-        <div class="two-column">
-            <div>
-                <h3 style="font-size: 28px; margin-bottom: 20px;">Zero-Knowledge Concept</h3>
-                <p>VitPay obscures sensitive data using a one-way cryptographic hash combined with a unique secret salt. Attackers cannot brute-force the salary amounts.</p>
-                <div style="background: #09090b; padding: 20px; border-radius: 12px; border: 1px solid #3f3f46; margin-top: 30px; font-family: monospace; color: #06b6d4;">
-                    Hash = Keccak256( Wallet + Amount + Salt )
+        <h2 style="font-size: 48px; color: #fff; margin-bottom: 30px; text-align: center;">Privacy at Scale <span style="color: #06b6d4;">(Keccak256)</span></h2>
+        
+        <div style="display: flex; gap: 40px; margin-top: 40px;">
+            <div style="flex: 1; background: rgba(255,255,255,0.02); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                <h3 style="color: #06b6d4; margin-bottom: 15px; font-size: 24px;">Salted Hash Commitment</h3>
+                <p style="color: #a1a1aa; font-size: 18px; line-height: 1.6;">
+                    VitPay obscures sensitive data using a one-way cryptographic hash combined with a unique secret salt. Attackers cannot brute-force the salary amounts.
+                </p>
+                <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px solid #333;">
+                    <code style="color: #a855f7; font-size: 16px;">Hash = Keccak256( Wallet + Amount + Salt )</code>
                 </div>
             </div>
-            <div class="image-wrapper">
-                <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80" alt="Blockchain Security">
+
+            <div style="flex: 1;">
+                <h3 style="color: #fff; margin-bottom: 20px; font-size: 24px;">Confidential Auditing</h3>
+                <table style="width: 100%; border-collapse: collapse; text-align: left; color: #a1a1aa;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #333; color: #fff;">
+                            <th style="padding: 10px 0;">Feature</th>
+                            <th style="padding: 10px 0;">Traditional Web3</th>
+                            <th style="padding: 10px 0; color: #06b6d4;">VitPay Protocol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #222;">
+                            <td style="padding: 15px 0; color: #fff;">Salary Privacy</td>
+                            <td style="padding: 15px 0;">Exposed to Public</td>
+                            <td style="padding: 15px 0; color: #06b6d4;">Cryptographically Shielded</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #222;">
+                            <td style="padding: 15px 0; color: #fff;">Compliance</td>
+                            <td style="padding: 15px 0;">Manual Reporting</td>
+                            <td style="padding: 15px 0; color: #06b6d4;">Automated Privacy Logs</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #222;">
+                            <td style="padding: 15px 0; color: #fff;">Verification</td>
+                            <td style="padding: 15px 0;">Trust-based / Oral</td>
+                            <td style="padding: 15px 0; color: #06b6d4;">Deterministic Hash Match</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px 0; color: #fff;">Employee Status</td>
+                            <td style="padding: 15px 0;">Off-chain Database</td>
+                            <td style="padding: 15px 0; color: #06b6d4;">On-chain Ledger Validation</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -215,66 +250,42 @@
     </div>
 </div>
 
-<div class="slide-container">
-    <h2 class="slide-title">Zero-Knowledge Auditing</h2>
-    <div class="content-area">
-        <table>
-            <thead>
-                <tr>
-                    <th>Feature</th>
-                    <th>Traditional Web3</th>
-                    <th style="color: #06b6d4;">VitPay Protocol</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Salary Privacy</td>
-                    <td>Exposed to Public</td>
-                    <td style="color: #fff; font-weight: bold;">Cryptographically Shielded</td>
-                </tr>
-                <tr>
-                    <td>Compliance</td>
-                    <td>Manual Reporting</td>
-                    <td style="color: #fff; font-weight: bold;">Automated Privacy Logs</td>
-                </tr>
-                <tr>
-                    <td>Verification</td>
-                    <td>Trust-based / Oral</td>
-                    <td style="color: #fff; font-weight: bold;">Mathematical Proof (Hash Check)</td>
-                </tr>
-                <tr>
-                    <td>Employee Status</td>
-                    <td>Off-chain Database</td>
-                    <td style="color: #fff; font-weight: bold;">On-chain Ledger Validation</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+
 
 <div class="slide-container">
-    <h2 class="slide-title">Strategic Roadmap</h2>
     <div class="content-area">
-        <div class="timeline-layout">
-            <div class="timeline-line"></div>
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <h3 style="margin-bottom: 10px; margin-top: 20px;">Q3 2026</h3>
-                <p style="font-size: 16px;">Arc Mainnet Launch & Public Deployment</p>
+        <h2 style="font-size: 48px; color: #fff; margin-bottom: 50px; text-align: center;">Strategic <span style="color: #a855f7;">Roadmap</span></h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+            <div style="background: rgba(6, 182, 212, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(6, 182, 212, 0.2); position: relative;">
+                <div style="position: absolute; top: -15px; left: 30px; background: #06b6d4; color: #000; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px;">Q3 2026</div>
+                <h3 style="color: #fff; font-size: 22px; margin: 20px 0 15px 0; line-height: 1.3;">Arc Mainnet Launch & Public Deployment</h3>
+                <ul style="color: #a1a1aa; font-size: 15px; line-height: 1.6; padding-left: 20px;">
+                    <li style="margin-bottom: 8px;">Comprehensive smart contract security audit and bug bounty phase.</li>
+                    <li style="margin-bottom: 8px;">Migration from Arc Testnet to permanent Arc Mainnet architecture.</li>
+                    <li>Onboarding early enterprise partners for pilot salary distributions.</li>
+                </ul>
             </div>
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <h3 style="margin-bottom: 10px; margin-top: 20px;">Q4 2026</h3>
-                <p style="font-size: 16px;">Cross-chain USDC Liquidity Aggregation</p>
+
+            <div style="background: rgba(168, 85, 247, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(168, 85, 247, 0.2); position: relative;">
+                <div style="position: absolute; top: -15px; left: 30px; background: #a855f7; color: #fff; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px;">Q4 2026</div>
+                <h3 style="color: #fff; font-size: 22px; margin: 20px 0 15px 0; line-height: 1.3;">Cross-chain USDC Liquidity Aggregation</h3>
+                <ul style="color: #a1a1aa; font-size: 15px; line-height: 1.6; padding-left: 20px;">
+                    <li style="margin-bottom: 8px;">Integration with CCIP/LayerZero interoperability protocols.</li>
+                    <li style="margin-bottom: 8px;">Enabling enterprises to fund payroll treasuries from Base and Sepolia natively.</li>
+                    <li>Automated liquidity routing to minimize transaction slippage.</li>
+                </ul>
             </div>
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <h3 style="margin-bottom: 10px; margin-top: 20px;">Q1 2027</h3>
-                <p style="font-size: 16px;">AI-Agentic Autonomous Payroll Systems</p>
+
+            <div style="background: rgba(59, 130, 246, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(59, 130, 246, 0.2); position: relative;">
+                <div style="position: absolute; top: -15px; left: 30px; background: #3b82f6; color: #fff; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px;">Q1 2027</div>
+                <h3 style="color: #fff; font-size: 22px; margin: 20px 0 15px 0; line-height: 1.3;">AI-Agentic Autonomous Payroll Systems</h3>
+                <ul style="color: #a1a1aa; font-size: 15px; line-height: 1.6; padding-left: 20px;">
+                    <li style="margin-bottom: 8px;">Deployment of integrated digital assistants to manage business efficiency and treasury logs.</li>
+                    <li style="margin-bottom: 8px;">Smart contract triggers for automated salary execution based on performance metrics.</li>
+                    <li>Predictive network gas-fee optimization modeling.</li>
+                </ul>
             </div>
-        </div>
-        <div class="image-wrapper" style="height: 250px; margin-top: 60px;">
-            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" alt="Network Future">
         </div>
     </div>
 </div>

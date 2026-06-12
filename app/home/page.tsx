@@ -41,8 +41,9 @@ export default function HomePage() {
           </span>
         </h1>
         
+        {/* REVISI: Mengganti Zero-Knowledge menjadi Salted Keccak256 */}
         <p className="text-lg md:text-xl text-zinc-400 max-w-3xl leading-relaxed mb-10">
-          VitPay is the economic operating system of the future. Distribute USDC globally with <span className="text-cyan-400">Zero-Knowledge</span> cryptographic security and <span className="text-purple-400">Sub-second</span> transaction speeds.
+          VitPay is the economic operating system of the future. Distribute USDC globally with <span className="text-cyan-400">Salted Keccak256</span> cryptographic security and <span className="text-purple-400">Sub-second</span> transaction speeds.
         </p>
 
         {/* Tombol CTA */}
@@ -134,7 +135,7 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/* --- CONFIDENTIALITY WORKFLOW MENGGANTIKAN TERMINAL BOHONGAN --- */}
+            {/* --- CONFIDENTIALITY WORKFLOW --- */}
             <div className="relative">
                 <div className="absolute inset-0 bg-cyan-500/10 blur-[60px] rounded-full" />
                 <div className="relative p-8 rounded-3xl bg-zinc-900 border border-zinc-800 flex flex-col gap-6 shadow-2xl">
@@ -168,11 +169,11 @@ export default function HomePage() {
                             </div>
                         </div>
 
-                        {/* Step 3 */}
+                        {/* Step 3 REVISI: Mengganti Zero-Knowledge Audit menjadi Confidential Audit Trail */}
                         <div className="flex items-start gap-4">
                             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 font-bold text-sm">3</div>
                             <div>
-                                <h4 className="text-zinc-200 font-bold text-sm mb-1">Zero-Knowledge Audit</h4>
+                                <h4 className="text-zinc-200 font-bold text-sm mb-1">Confidential Audit Trail</h4>
                                 <p className="text-zinc-500 text-sm leading-relaxed">
                                     Auditors can verify the authenticity of any transaction via the Privacy Log using the original employer's Secret Salt.
                                 </p>
