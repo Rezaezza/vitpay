@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AppLayout from "@/components/layout/AppLayout";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "VitPay - Confidential Payroll on Arc",
@@ -15,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AppLayout>
-          {children}
-        </AppLayout>
+        <Providers> 
+          <AppLayout>
+            {children}
+          </AppLayout>
+        </Providers> 
       </body>
     </html>
   );
