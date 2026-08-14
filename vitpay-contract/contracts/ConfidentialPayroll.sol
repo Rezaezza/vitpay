@@ -21,12 +21,22 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
     IERC20 public immutable usdc;
     address public treasury;
 
+    // ==========================================
+// BUSINESS REGISTRY
+// ==========================================
+
+uint256 private _businessCounter;
+
+mapping(address => Business) private _businesses;
+mapping(uint256 => address) private _businessOwners;
+
     uint256 private _payrollCounter;
     uint256 private _employeeCounter;
 
-    mapping(address => Employee) private _employees;
+    mapping(address => mapping(address => Employee)) private _employees;
     mapping(uint256 => PayrollRecord) private _payrolls;
-    mapping(address => uint256[]) private _employeePayrollIds;
+    mapping(address => mapping(address => uint256[]))
+    private _employeePayrollIds;
     mapping(address => bool) public isEmployer;
 
     PayrollStatistics private _statistics;
@@ -43,27 +53,82 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
     }
 
     modifier validEmployee(address employee) {
-        if (!_employees[employee].exists) revert EmployeeNotFound();
-        if (_employees[employee].status != EmployeeStatus.ACTIVE) revert EmployeeInactive();
+        if (!_employees[msg.sender][employee].exists) revert EmployeeNotFound();
+        if (
+    _employees[msg.sender][employee].status != EmployeeStatus.ACTIVE
+     ) revert EmployeeInactive();
         _;
     }
 
-    // ==========================================
+  // ==========================================
     // CONSTRUCTOR
     // ==========================================
-
-    constructor(address initialOwner, address usdcAddress) Ownable(initialOwner) {
-        if (initialOwner == address(0) || usdcAddress == address(0)) revert ZeroAddress();
-        
-        usdc = IERC20(usdcAddress);
-        treasury = initialOwner;
-        isEmployer[initialOwner] = true;
+  
+   constructor(address initialOwner, address usdcAddress) Ownable(initialOwner) {
+    if (initialOwner == address(0) || usdcAddress == address(0)) {
+        revert ZeroAddress();
     }
+
+    usdc = IERC20(usdcAddress);
+    treasury = initialOwner;
+    isEmployer[initialOwner] = true;
+
+    // Register owner sebagai Business pertama
+    _businessCounter = 1;
+
+    _businesses[initialOwner] = Business({
+        id: 1,
+        companyName: "VitPay",
+        legalName: "VitPay",
+        email: "",
+        website: "",
+        logoURI: "",
+        country: "",
+        verified: true,
+        createdAt: block.timestamp
+    });
+
+    _businessOwners[1] = initialOwner;
+}
 
     // ==========================================
     // ADMIN FUNCTIONS
     // ==========================================
 
+    function registerBusiness(
+    string calldata companyName
+) external {
+
+    if (bytes(companyName).length == 0)
+        revert InvalidBusinessName();
+
+    if (isEmployer[msg.sender])
+        revert BusinessAlreadyExists();
+
+    _businessCounter++;
+
+    isEmployer[msg.sender] = true;
+
+    _businesses[msg.sender] = Business({
+        id: _businessCounter,
+        companyName: companyName,
+        legalName: "",
+        email: "",
+        website: "",
+        logoURI: "",
+        country: "",
+        verified: false,
+        createdAt: block.timestamp
+    });
+
+    _businessOwners[_businessCounter] = msg.sender;
+
+    emit BusinessRegistered(
+        msg.sender,
+        companyName
+    );
+}
+    
     function setEmployer(address employer, bool status) external onlyOwner {
         if (employer == address(0)) revert ZeroAddress();
         isEmployer[employer] = status;
@@ -75,6 +140,30 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
         treasury = newTreasury;
         emit TreasuryUpdated(oldTreasury, newTreasury);
     }
+
+    function updateBusiness(
+    string calldata companyName,
+    string calldata legalName,
+    string calldata email,
+    string calldata website,
+    string calldata logoURI,
+    string calldata country
+) external onlyEmployer {
+
+    Business storage business = _businesses[msg.sender];
+
+    business.companyName = companyName;
+    business.legalName = legalName;
+    business.email = email;
+    business.website = website;
+    business.logoURI = logoURI;
+    business.country = country;
+
+    emit BusinessUpdated(
+        msg.sender,
+        companyName
+    );
+}
 
     function pause() external onlyOwner {
         _pause();
@@ -94,9 +183,10 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
         string calldata name
     ) external onlyEmployer {
         if (wallet == address(0)) revert ZeroAddress();
-        if (_employees[wallet].exists) revert EmployeeAlreadyExists();
+        if (_employees[msg.sender][wallet].exists)
+    revert EmployeeAlreadyExists();
 
-        _employees[wallet] = Employee({
+        _employees[msg.sender][wallet] = Employee({
             wallet: wallet,
             employeeId: employeeId,
             name: name,
@@ -115,9 +205,9 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
         address employee,
         EmployeeStatus status
     ) external onlyEmployer {
-        if (!_employees[employee].exists) revert EmployeeNotFound();
+        if (!_employees[msg.sender][employee].exists) revert EmployeeNotFound();
         
-        _employees[employee].status = status;
+        _employees[msg.sender][employee].status = status;
         emit EmployeeStatusUpdated(employee, status);
     }
 
@@ -152,7 +242,7 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
         });
 
         // Mapping array ID untuk employee
-        _employeePayrollIds[employee].push(currentId);
+        _employeePayrollIds[msg.sender][employee].push(currentId);
 
         // Update Global Stats
         _statistics.totalPayrolls++;
@@ -175,8 +265,13 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
             uint256 amt = amounts[i];
             bytes32 hash = dataHashes[i];
 
-            if (!_employees[emp].exists) revert EmployeeNotFound();
-            if (_employees[emp].status != EmployeeStatus.ACTIVE) revert EmployeeInactive();
+           if (!_employees[msg.sender][emp].exists)
+    revert EmployeeNotFound();
+
+if (
+    _employees[msg.sender][emp].status != EmployeeStatus.ACTIVE
+)
+    revert EmployeeInactive();
             if (amt == 0) revert InvalidAmount();
             if (hash == bytes32(0)) revert InvalidHash();
 
@@ -195,7 +290,7 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
                 timestamp: block.timestamp
             });
 
-            _employeePayrollIds[emp].push(currentId);
+            _employeePayrollIds[msg.sender][emp].push(currentId);
             _statistics.totalAmountPaid += amt;
             
             emit SalaryPaid(currentId, msg.sender, emp, amt, hash);
@@ -208,9 +303,22 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
     // VIEW FUNCTIONS
     // ==========================================
 
-    function getEmployee(address employee) external view returns (Employee memory) {
-        if (!_employees[employee].exists) revert EmployeeNotFound();
-        return _employees[employee];
+    function getBusiness(
+    address wallet
+)
+external
+view
+returns (Business memory)
+{
+    return _businesses[wallet];
+}
+    
+    function getEmployee(
+    address employer,
+    address employee
+) external view returns (Employee memory) {
+        if (!_employees[employer][employee].exists) revert EmployeeNotFound();
+        return _employees[employer][employee];
     }
 
     function getPayroll(uint256 payrollId) external view returns (PayrollRecord memory) {
@@ -218,8 +326,11 @@ contract ConfidentialPayroll is IVitPay, Ownable, Pausable, ReentrancyGuard {
         return _payrolls[payrollId];
     }
 
-    function getEmployeePayrollIds(address employee) external view returns (uint256[] memory) {
-        return _employeePayrollIds[employee];
+    function getEmployeePayrollIds(
+    address employer,
+    address employee
+) external view returns (uint256[] memory) {
+        return _employeePayrollIds[employer][employee];
     }
 
     function getStatistics() external view returns (PayrollStatistics memory) {

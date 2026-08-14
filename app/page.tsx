@@ -1,9 +1,22 @@
 // FILE: app/page.tsx
+
+"use client";
+
 import Stats from "@/components/dashboard/Stats";
 import SalaryForm from "@/components/payroll/SalaryForm";
 import TransactionHistory from "@/components/dashboard/TransactionHistory";
 
+import RegisterBusiness from "@/components/business/RegisterBusiness";
+import { useWallet } from "@/providers/WalletProvider";
+
 export default function Home() {
+
+const { isConnected, business } = useWallet();
+
+if (isConnected && !business) {
+  return <RegisterBusiness />;
+}
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-10">
       {/* Header Halaman */}

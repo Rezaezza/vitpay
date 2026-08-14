@@ -15,6 +15,9 @@ interface PayrollErrors {
     
     /// @notice Terjadi saat mencoba mendaftarkan wallet yang sudah ada
     error EmployeeAlreadyExists();
+
+    error BusinessAlreadyExists();
+    error InvalidBusinessName();
     
     /// @notice Terjadi saat mencoba akses data employee yang belum terdaftar
     error EmployeeNotFound();

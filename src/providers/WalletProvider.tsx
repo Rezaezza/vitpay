@@ -10,6 +10,10 @@ interface WalletContextType {
   isConnected: boolean;
   isConnecting: boolean;
   contract: Contract | null;
+
+  business: any | null;
+  refreshBusiness: () => Promise<void>;
+
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
 }
@@ -19,6 +23,10 @@ const WalletContext = createContext<WalletContextType>({
   isConnected: false,
   isConnecting: false,
   contract: null,
+
+  business: null,
+  refreshBusiness: async () => {},
+
   connectWallet: async () => {},
   disconnectWallet: () => {},
 });
@@ -30,6 +38,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [contract, setContract] = useState<Contract | null>(null);
+
+  const [business, setBusiness] = useState<any>(null);
 
   const ARC_CHAIN_ID_HEX = "0x" + Number(5042002).toString(16);
 
@@ -78,6 +88,20 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
     setAddress(walletAddress);
     setContract(payrollContract);
+
+    try {
+    const businessData = await payrollContract.getBusiness(walletAddress);
+
+    if (Number(businessData.id) > 0) {
+        setBusiness(businessData);
+    } else {
+        setBusiness(null);
+    }
+
+} catch {
+    setBusiness(null);
+}
+
     setIsConnected(true);
     
     localStorage.setItem("vitpay_connected", "true");
@@ -106,6 +130,19 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       setIsConnecting(false);
     }
   }, [initEthers]);
+
+
+  const refreshBusiness = useCallback(async () => {
+  if (!contract || !address) return;
+
+  try {
+    const businessData = await contract.getBusiness(address);
+    setBusiness(businessData);
+  } catch {
+    setBusiness(null);
+  }
+}, [contract, address]);
+
 
   const disconnectWallet = () => {
     setAddress(null);
@@ -151,7 +188,18 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   }, [initEthers, ARC_CHAIN_ID_HEX]);
 
   return (
-    <WalletContext.Provider value={{ address, isConnected, isConnecting, contract, connectWallet, disconnectWallet }}>
+    <WalletContext.Provider value={{
+    address,
+    isConnected,
+    isConnecting,
+    contract,
+
+    business,
+    refreshBusiness,
+
+    connectWallet,
+    disconnectWallet
+}}>
       {children}
     </WalletContext.Provider>
   );

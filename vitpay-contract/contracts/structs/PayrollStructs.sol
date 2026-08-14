@@ -18,6 +18,18 @@ interface PayrollStructs {
         CANCELLED
     }
 
+    struct Business {
+    uint256 id;
+    string companyName;
+    string legalName;
+    string email;
+    string website;
+    string logoURI;
+    string country;
+    bool verified;
+    uint256 createdAt;
+}
+
     struct Employee {
         address wallet;
         string employeeId;

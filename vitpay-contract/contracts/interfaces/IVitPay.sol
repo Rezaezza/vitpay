@@ -35,6 +35,16 @@ interface IVitPay is PayrollStructs, PayrollErrors {
     
     event TreasuryUpdated(address indexed oldTreasury, address indexed newTreasury);
 
+    event BusinessRegistered(
+    address indexed businessOwner,
+    string companyName
+);
+
+event BusinessUpdated(
+    address indexed businessOwner,
+    string companyName
+);
+
     // ==========================================
     // CORE FUNCTIONS
     // ==========================================
@@ -62,13 +72,45 @@ interface IVitPay is PayrollStructs, PayrollErrors {
         bytes32[] calldata dataHashes
     ) external;
 
+    function registerBusiness(
+    string calldata companyName
+) external;
+
+function updateBusiness(
+    string calldata companyName,
+    string calldata legalName,
+    string calldata email,
+    string calldata website,
+    string calldata logoURI,
+    string calldata country
+) external;
+
     // ==========================================
     // VIEW FUNCTIONS
     // ==========================================
 
-    function getEmployee(address employee) external view returns (Employee memory);
+    function getBusiness(
+    address wallet
+)
+    external
+    view
+    returns (Business memory);
+    
+    function getEmployee(
+    address employer,
+    address employee
+)
+    external
+    view
+    returns (Employee memory);
     
     function getPayroll(uint256 payrollId) external view returns (PayrollRecord memory);
     
-    function getEmployeePayrollIds(address employee) external view returns (uint256[] memory);
+    function getEmployeePayrollIds(
+    address employer,
+    address employee
+)
+    external
+    view
+    returns (uint256[] memory);
 }

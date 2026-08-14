@@ -9,7 +9,11 @@ import { generatePayrollHash } from "@/utils/crypto";
 import { Shield, Lock, Eye, EyeOff, Loader2, Send } from "lucide-react";
 
 export default function SalaryForm() {
-  const { contract, isConnected } = useWallet();
+  const {
+    contract,
+    isConnected,
+    business
+} = useWallet();
   const [employee, setEmployee] = useState("");
   const [amount, setAmount] = useState("");
   const [secret, setSecret] = useState("");
@@ -21,6 +25,12 @@ export default function SalaryForm() {
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isConnected || !contract) {
+
+     if (!business) {
+  alert("Silakan Register Business terlebih dahulu.");
+  return;
+}
+
       alert("Silakan Connect Wallet terlebih dahulu!");
       return;
     }
