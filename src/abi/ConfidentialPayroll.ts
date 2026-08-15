@@ -1,7 +1,7 @@
 // src/abi/ConfidentialPayroll.ts
 
 // Address contract yang baru saja kamu deploy di Arc Testnet
-export const PAYROLL_CONTRACT_ADDRESS = "0x6320AC05A63Ae0496c146ca4f316DAbd8482b12E";
+export const PAYROLL_CONTRACT_ADDRESS = "0xd520dec10363f8b05EDbc6198777FFDA1791BdCA";
 
 // Address resmi USDC di Arc Testnet
 export const USDC_CONTRACT_ADDRESS = "0x3600000000000000000000000000000000000000";

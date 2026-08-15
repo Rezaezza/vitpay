@@ -27,7 +27,7 @@ export default function EmployeesPage() {
   // Fungsi Register Karyawan
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isConnected || !contract) {
+    if (!isConnected || !contract || !address) {
       alert("Silakan Connect Wallet terlebih dahulu!");
       return;
     }
@@ -35,15 +35,17 @@ export default function EmployeesPage() {
     setIsRegistering(true);
     try {
       const tx = await contract.registerEmployee(regWallet, regId, regName);
-      await tx.wait(); // Tunggu konfirmasi blockchain
+      await tx.wait();
       
-      alert(`✅ Berhasil! Karyawan ${regName} resmi terdaftar di Blockchain.`);
+      window.dispatchEvent(new Event("employeeRegistered")); // Tunggu konfirmasi blockchain
+      
+      alert(`✅ Success! Employee ${regName} officially registered on the blockchain.`);
       setRegWallet("");
       setRegId("");
       setRegName("");
     } catch (error: any) {
-      console.error("Gagal mendaftarkan karyawan:", error);
-      alert("Gagal mendaftarkan karyawan. Pastikan kamu menggunakan wallet Admin/Employer.");
+      console.error("Failed to register employee:", error);
+      alert("Failed to register employee. Ensure you use the Admin/Employer wallet..");
     } finally {
       setIsRegistering(false);
     }
@@ -61,7 +63,7 @@ export default function EmployeesPage() {
     try {
       // getEmployee mengembalikan tuple dari smart contract
       if (!address) {
-  alert("Wallet belum terhubung.");
+  alert("Wallet not connected.");
   return;
 }
 
@@ -72,7 +74,7 @@ const data = await contract.getEmployee(
       
       // Jika 'exists' bernilai false, berarti belum terdaftar
       if (!data.exists) {
-        setSearchError("Karyawan dengan wallet ini tidak ditemukan.");
+        setSearchError("An employee with this wallet was not found..");
       } else {
         setEmployeeData({
           wallet: data.wallet,
@@ -83,8 +85,8 @@ const data = await contract.getEmployee(
         });
       }
     } catch (error: any) {
-      console.error("Error mencari karyawan:", error);
-      setSearchError("Terjadi kesalahan saat mencari data di jaringan.");
+      console.error("Error while searching for employees:", error);
+      setSearchError("An error occurred while searching for data on the network.");
     } finally {
       setIsSearching(false);
     }

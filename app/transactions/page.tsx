@@ -16,7 +16,11 @@ interface Transaction {
 }
 
 export default function TransactionsPage() {
-  const { contract, isConnected } = useWallet();
+  const {
+    contract,
+    isConnected,
+    address,
+} = useWallet();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,30 +43,37 @@ export default function TransactionsPage() {
       
       setIsLoading(true);
       try {
-        const stats = await contract.getStatistics();
-        const total = Number(stats.totalPayrolls);
+if (!address) return;
 
-        if (total === 0) {
-          setTransactions([]);
-          setIsLoading(false);
-          return;
-        }
+const payrollIds = await contract.getEmployerPayrollIds(address);
 
-        const allTxs: Transaction[] = [];
-        // Loop mundur untuk mengambil SEMUA transaksi (dari yang terbaru ke terlama)
-        for (let i = total; i >= 1; i--) {
-          const tx = await contract.getPayroll(i);
-          allTxs.push({
-            id: Number(tx.id),
-            employee: tx.employee,
-            amount: formatUnits(tx.amount, 6),
-            timestamp: new Date(Number(tx.timestamp) * 1000),
-            status: Number(tx.status),
-            dataHash: tx.dataHash, // Ambil data enkripsi
-          });
-        }
+if (payrollIds.length === 0) {
+    setTransactions([]);
+    return;
+}
 
-        setTransactions(allTxs);
+const ids = [...payrollIds]
+    .map(Number)
+    .reverse();
+
+const allTxs: Transaction[] = [];
+
+for (const id of ids) {
+
+    const tx = await contract.getPayroll(id);
+
+    allTxs.push({
+        id: Number(tx.id),
+        employee: tx.employee,
+        amount: formatUnits(tx.amount,6),
+        timestamp: new Date(Number(tx.timestamp)*1000),
+        status: Number(tx.status),
+        dataHash: tx.dataHash,
+    });
+
+}
+
+setTransactions(allTxs);
       } catch (error) {
         console.error("Gagal mengambil riwayat transaksi:", error);
       } finally {
@@ -71,7 +82,11 @@ export default function TransactionsPage() {
     };
 
     fetchAllHistory();
-  }, [contract, isConnected]);
+  }, [
+    contract,
+    isConnected,
+    address,
+]);
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-10">
