@@ -6,7 +6,11 @@ import { useWallet } from "@/providers/WalletProvider";
 import { UserPlus, Search, UserCheck, ShieldAlert, Loader2, UserRoundX } from "lucide-react";
 
 export default function EmployeesPage() {
-  const { contract, isConnected } = useWallet();
+  const {
+  contract,
+  isConnected,
+  address,
+} = useWallet();
   
   // State untuk Registrasi
   const [regWallet, setRegWallet] = useState("");
@@ -56,7 +60,15 @@ export default function EmployeesPage() {
 
     try {
       // getEmployee mengembalikan tuple dari smart contract
-      const data = await contract.getEmployee(searchWallet);
+      if (!address) {
+  alert("Wallet belum terhubung.");
+  return;
+}
+
+const data = await contract.getEmployee(
+  address,
+  searchWallet
+);
       
       // Jika 'exists' bernilai false, berarti belum terdaftar
       if (!data.exists) {

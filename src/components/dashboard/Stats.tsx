@@ -6,7 +6,11 @@ import { useWallet } from "@/providers/WalletProvider";
 import { formatUnits } from "ethers";
 
 export default function Stats() {
-  const { contract, isConnected } = useWallet();
+  const {
+  contract,
+  isConnected,
+  address,
+} = useWallet();
   const [stats, setStats] = useState({
     totalEmployees: "0",
     totalPayrolls: "0",
@@ -17,7 +21,9 @@ export default function Stats() {
     const fetchStats = async () => {
       if (contract && isConnected) {
         try {
-          const data = await contract.getStatistics();
+          if (!address) return;
+
+const data = await contract.getStatistics(address);
           setStats({
             totalEmployees: data.totalEmployees.toString(),
             totalPayrolls: data.totalPayrolls.toString(),
@@ -29,7 +35,7 @@ export default function Stats() {
       }
     };
     fetchStats();
-  }, [contract, isConnected]);
+  }, [contract, isConnected, address]);
 
   const cards = [
     { name: "Employees", value: stats.totalEmployees, icon: Users, color: "text-blue-400" },

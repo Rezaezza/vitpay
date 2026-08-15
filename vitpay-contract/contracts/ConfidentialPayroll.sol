@@ -35,11 +35,16 @@ mapping(uint256 => address) private _businessOwners;
 
     mapping(address => mapping(address => Employee)) private _employees;
     mapping(uint256 => PayrollRecord) private _payrolls;
+
+    mapping(address => uint256[])
+private _employerPayrollIds;
+
     mapping(address => mapping(address => uint256[]))
     private _employeePayrollIds;
     mapping(address => bool) public isEmployer;
 
-    PayrollStatistics private _statistics;
+    mapping(address => PayrollStatistics)
+private _employerStatistics;
 
     // ==========================================
     // MODIFIERS
@@ -195,8 +200,7 @@ mapping(uint256 => address) private _businessOwners;
             createdAt: block.timestamp
         });
 
-        _employeeCounter++;
-        _statistics.totalEmployees = _employeeCounter;
+  _employerStatistics[msg.sender].totalEmployees++;
 
         emit EmployeeRegistered(wallet, employeeId, name);
     }
@@ -245,8 +249,11 @@ mapping(uint256 => address) private _businessOwners;
         _employeePayrollIds[msg.sender][employee].push(currentId);
 
         // Update Global Stats
-        _statistics.totalPayrolls++;
-        _statistics.totalAmountPaid += amount;
+ _employerStatistics[msg.sender].totalPayrolls++;
+
+_employerStatistics[msg.sender].totalAmountPaid += amount;
+
+_employerPayrollIds[msg.sender].push(currentId);
 
         emit SalaryPaid(currentId, msg.sender, employee, amount, dataHash);
     }
@@ -291,12 +298,14 @@ if (
             });
 
             _employeePayrollIds[msg.sender][emp].push(currentId);
-            _statistics.totalAmountPaid += amt;
+            _employerStatistics[msg.sender].totalAmountPaid += amt;
+
+_employerPayrollIds[msg.sender].push(currentId);
             
             emit SalaryPaid(currentId, msg.sender, emp, amt, hash);
         }
         
-        _statistics.totalPayrolls += length;
+        _employerStatistics[msg.sender].totalPayrolls += length;
     }
 
     // ==========================================
@@ -333,7 +342,26 @@ returns (Business memory)
         return _employeePayrollIds[employer][employee];
     }
 
-    function getStatistics() external view returns (PayrollStatistics memory) {
-        return _statistics;
-    }
+
+function getEmployerPayrollIds(
+    address employer
+)
+external
+view
+returns (uint256[] memory)
+{
+    return _employerPayrollIds[employer];
+}
+
+
+  function getStatistics(
+    address employer
+)
+external
+view
+returns (PayrollStatistics memory)
+{
+    return _employerStatistics[employer];
+}
+
 }

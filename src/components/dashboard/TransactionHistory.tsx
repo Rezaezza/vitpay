@@ -16,7 +16,11 @@ interface Transaction {
 }
 
 export default function TransactionHistory() {
-  const { contract, isConnected } = useWallet();
+  const {
+    contract,
+    isConnected,
+    address,
+} = useWallet();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,32 +44,34 @@ export default function TransactionHistory() {
       setIsLoading(true);
       try {
         // 1. Ambil total payroll yang pernah dibuat
-        const stats = await contract.getStatistics();
-        const total = Number(stats.totalPayrolls);
+        if (!address) return;
 
-        if (total === 0) {
-          setTransactions([]);
-          setIsLoading(false);
-          return;
-        }
 
-        // 2. Ambil 5 transaksi terakhir (loop mundur)
-        const recentTxs: Transaction[] = [];
-        const startIndex = total;
-        const endIndex = Math.max(1, total - 4); // Ambil maksimal 5 data
 
-        for (let i = startIndex; i >= endIndex; i--) {
-          const tx = await contract.getPayroll(i);
-          recentTxs.push({
-            id: Number(tx.id),
-            employee: tx.employee,
-            amount: formatUnits(tx.amount, 6), // Convert USDC dari Wei
-            timestamp: new Date(Number(tx.timestamp) * 1000), // Blockchain time dalam detik
-            status: Number(tx.status),
-          });
-        }
+const payrollIds = await contract.getEmployerPayrollIds(address);
 
-        setTransactions(recentTxs);
+const ids = [...payrollIds]
+    .map(Number)
+    .reverse()
+    .slice(0,5);
+
+const recentTxs = [];
+
+for (const id of ids) {
+
+    const tx = await contract.getPayroll(id);
+
+    recentTxs.push({
+        id: Number(tx.id),
+        employee: tx.employee,
+        amount: formatUnits(tx.amount,6),
+        timestamp: new Date(Number(tx.timestamp)*1000),
+        status: Number(tx.status),
+    });
+
+}
+
+setTransactions(recentTxs);
       } catch (error) {
         console.error("Gagal mengambil riwayat transaksi:", error);
       } finally {
@@ -78,7 +84,7 @@ export default function TransactionHistory() {
     // Opsional: Refresh tiap 15 detik agar real-time
     const interval = setInterval(fetchHistory, 15000);
     return () => clearInterval(interval);
-  }, [contract, isConnected]);
+  }, [contract, isConnected, address]);
 
   return (
     <div className="glass-panel rounded-2xl p-8 border border-zinc-800/50 flex flex-col h-full">

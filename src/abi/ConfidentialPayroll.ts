@@ -21,9 +21,11 @@ export const PAYROLL_ABI = [
 "function updateBusiness(string companyName,string legalName,string email,string website,string logoURI,string country) external",
 "function getBusiness(address owner) external view returns (tuple(uint256 id,string companyName,string legalName,string email,string website,string logoURI,string country,bool verified,uint256 createdAt))",
   "function getEmployee(address employer,address employee) external view returns (tuple(address wallet,string employeeId,string name,bool exists,uint8 status,uint256 createdAt))",
+ 
   "function getPayroll(uint256 payrollId) external view returns (tuple(uint256 id, address employer, address employee, uint256 amount, bytes32 dataHash, uint8 status, uint256 timestamp))",
   "function getEmployeePayrollIds(address employer,address employee) external view returns (uint256[])",
-  "function getStatistics() external view returns (tuple(uint256 totalEmployees, uint256 totalPayrolls, uint256 totalAmountPaid))",
+  "function getEmployerPayrollIds(address employer) external view returns (uint256[])",
+  "function getStatistics(address employer) external view returns (tuple(uint256 totalEmployees,uint256 totalPayrolls,uint256 totalAmountPaid))",
   "function isEmployer(address account) external view returns (bool)",
   
   // --- Events ---
