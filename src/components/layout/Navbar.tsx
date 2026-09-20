@@ -5,6 +5,9 @@ import { useState } from "react";
 import { Wallet, Loader2, LogOut, Copy, Check } from "lucide-react";
 import { useWallet } from "@/providers/WalletProvider";
 
+import NetworkSwitcher from "./NetworkSwitcher";
+
+
 export default function Navbar() { 
   const { address, isConnected, isConnecting, connectWallet, disconnectWallet } = useWallet();
   const [isCopied, setIsCopied] = useState(false);
@@ -29,6 +32,9 @@ export default function Navbar() {
       
       {/* Bagian Kanan: Actions */}
       <div className="flex items-center gap-4">
+
+        <NetworkSwitcher />
+
         
         {/* State: Terkoneksi */}
         {isConnected && address ? (

@@ -4,16 +4,19 @@
 import { useState } from "react";
 import { parseUnits, Contract, BrowserProvider } from "ethers";
 import { useWallet } from "@/providers/WalletProvider";
-import { PAYROLL_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS, USDC_ABI } from "@/abi/ConfidentialPayroll";
+import { USDC_ABI } from "@/abi/ConfidentialPayroll";
 import { generatePayrollHash } from "@/utils/crypto";
 import { Shield, Lock, Eye, EyeOff, Loader2, Send } from "lucide-react";
 
 export default function SalaryForm() {
-  const {
+ const {
     contract,
+    usdcContract,
+    currentNetwork,
     isConnected,
-    business
+    business,
 } = useWallet();
+
   const [employee, setEmployee] = useState("");
   const [amount, setAmount] = useState("");
   const [secret, setSecret] = useState("");
@@ -27,13 +30,18 @@ export default function SalaryForm() {
     if (!isConnected || !contract) {
 
      if (!business) {
-  alert("Silakan Register Business terlebih dahulu.");
+  alert("Please register your business first.");
   return;
 }
 
-      alert("Silakan Connect Wallet terlebih dahulu!");
+      alert("Please connect your wallet first!");
       return;
     }
+
+    if (!usdcContract || !currentNetwork) {
+  alert("Network not detected. Please reconnect your wallet.");
+  return;
+}
 
     setIsLoading(true);
     try {
@@ -46,13 +54,11 @@ export default function SalaryForm() {
 
       // 3. Setup Contract USDC untuk Approval
       setStatusText("Meminta Approval USDC...");
-      const ethereum = (window as any).ethereum;
-      const provider = new BrowserProvider(ethereum);
-      const signer = await provider.getSigner();
-      const usdcContract = new Contract(USDC_CONTRACT_ADDRESS, USDC_ABI, signer);
 
-      // 4. Panggil fungsi Approve (Minta izin ke USDC untuk ditarik oleh VitPay)
-      const approveTx = await usdcContract.approve(PAYROLL_CONTRACT_ADDRESS, amountWei);
+ // Pakai usdcContract dari context (sudah sesuai jaringan aktif)
+const usdcContractInstance = usdcContract ?? new Contract(currentNetwork!.usdcAddress, USDC_ABI, signer);
+const approveTx = await usdcContractInstance.approve(currentNetwork!.payrollContractAddress, amountWei);
+
       setStatusText("Menunggu konfirmasi Approval...");
       await approveTx.wait();
 

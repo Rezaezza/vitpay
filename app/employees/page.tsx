@@ -6,11 +6,14 @@ import { useWallet } from "@/providers/WalletProvider";
 import { UserPlus, Search, UserCheck, ShieldAlert, Loader2, UserRoundX } from "lucide-react";
 
 export default function EmployeesPage() {
-  const {
+const {
   contract,
   isConnected,
   address,
+  business,
+  currentNetwork,
 } = useWallet();
+
   
   // State untuk Registrasi
   const [regWallet, setRegWallet] = useState("");
@@ -23,6 +26,24 @@ export default function EmployeesPage() {
   const [isSearching, setIsSearching] = useState(false);
   const [employeeData, setEmployeeData] = useState<any>(null);
   const [searchError, setSearchError] = useState("");
+
+  // Guard: belum register business di jaringan ini
+if (isConnected && !business) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center px-4">
+      <div className="p-6 rounded-2xl bg-orange-500/10 border border-orange-500/20 max-w-sm w-full">
+        <p className="text-orange-400 font-bold text-lg">Business Belum Terdaftar</p>
+        <p className="text-zinc-500 text-sm mt-2">
+          Register your business at <span className="text-zinc-300 font-medium">{currentNetwork?.label ?? "jaringan ini"}</span> terlebih dahulu untuk mengakses halaman ini.
+        </p>
+        <a href="/" className="inline-block mt-4 px-6 py-2.5 bg-cyan-500 text-zinc-950 font-bold rounded-xl text-sm hover:bg-cyan-400 transition-all">
+          Register Business
+        </a>
+      </div>
+    </div>
+  );
+}
+
 
   // Fungsi Register Karyawan
   const handleRegister = async (e: React.FormEvent) => {
