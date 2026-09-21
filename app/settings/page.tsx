@@ -28,7 +28,7 @@ if (isConnected && !business) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center px-4">
       <div className="p-6 rounded-2xl bg-orange-500/10 border border-orange-500/20 max-w-sm w-full">
-        <p className="text-orange-400 font-bold text-lg">Business Belum Terdaftar</p>
+        <p className="text-orange-400 font-bold text-lg">Business Not Yet Registered</p>
         <p className="text-zinc-500 text-sm mt-2">
           Register your business at <span className="text-zinc-300 font-medium">{currentNetwork?.label ?? "jaringan ini"}</span> terlebih dahulu untuk mengakses halaman ini.
         </p>
@@ -55,18 +55,18 @@ if (isConnected && !business) {
     try {
       const tx = await contract.updateEmployeeStatus(empWallet, parseInt(empStatus));
       await tx.wait();
-      alert("✅ Status Karyawan berhasil diperbarui di Blockchain!");
+      alert("✅ Employee status successfully updated on the blockchain!");
       setEmpWallet("");
     } catch (err) {
       console.error(err);
-      alert("Gagal memperbarui status. Pastikan anda adalah Admin/Employer.");
+      alert("Failed to update status. Please ensure you are the Admin/Employer.");
     } finally {
       setIsUpdating(false);
     }
   };
 
   const clearCache = () => {
-    if(confirm("Hapus semua data sesi dan disconnect wallet?")) {
+    if(confirm("Clear all session data and disconnect wallet?")) {
       disconnectWallet();
       window.location.reload();
     }
