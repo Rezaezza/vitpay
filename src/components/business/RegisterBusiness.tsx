@@ -36,11 +36,11 @@ export default function RegisterBusiness() {
         await txUpdate.wait();
       }
 
-      alert("✅ Business berhasil didaftarkan di blockchain!");
+      alert("✅ The business has been successfully registered on the blockchain!");
       window.location.reload();
     } catch (err: any) {
       console.error(err);
-      alert("Register gagal. Pastikan wallet kamu terhubung dengan benar.");
+      alert("Register failed. Please ensure your wallet is connected correctly.");
     } finally {
       setLoading(false);
     }
@@ -170,8 +170,8 @@ export default function RegisterBusiness() {
             <div className="px-4 py-3 rounded-xl bg-zinc-800/50 border border-zinc-700/50">
               <p className="text-xs text-zinc-500 flex items-start gap-2">
                 <ShieldCheck size={13} className="text-cyan-400 flex-shrink-0 mt-0.5" />
-                Data bisnis kamu disimpan permanen di blockchain {currentNetwork?.label ?? "Arc"}. 
-                Field opsional bisa diisi atau diupdate nanti di Settings.
+                Business data is permanently stored on the blockchain {currentNetwork?.label ?? "Arc"}. 
+                Optional fields can be filled or updated later in Settings.
               </p>
             </div>
 
@@ -184,7 +184,7 @@ export default function RegisterBusiness() {
               {loading ? (
                 <>
                   <Loader2 size={18} className="animate-spin" />
-                  <span>Mendaftarkan ke Blockchain...</span>
+                  <span>Registering to the blockchain...</span>
                 </>
               ) : (
                 <>
@@ -199,7 +199,7 @@ export default function RegisterBusiness() {
 
         {/* Footer hint */}
         <p className="text-center text-xs text-zinc-600 mt-4">
-          Hanya 1 business per wallet address yang diizinkan oleh smart contract.
+          Only 1 business per wallet address is allowed by the smart contract.
         </p>
 
       </div>
