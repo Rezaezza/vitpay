@@ -66,7 +66,10 @@ export default function NetworkSwitcher() {
                   </div>
                   <div className="flex items-center gap-1.5">
                     {!network.isTestnet && network.payrollContractAddress === "0x0000000000000000000000000000000000000000" && (
-                      <AlertTriangle size={13} className="text-orange-400" title="Contract belum di-deploy" />
+                      <span title="Contract belum di-deploy">
+  <AlertTriangle size={13} className="text-orange-400" />
+</span>
+
                     )}
                     {isActive && <CheckCircle2 size={14} className="text-cyan-400" />}
                     <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
