@@ -146,9 +146,18 @@ if (isConnected && !business) {
                 <div className="p-4 rounded-lg bg-zinc-900 border border-zinc-800 font-mono text-sm text-zinc-300 break-all">
                   {generatedHash}
                 </div>
-                <p className="text-xs text-zinc-500 mt-4">
-                  * Compare this hash with the "Encryption Hash" shown in the Transaction Ledger to prove authenticity to auditors.
-                </p>
+ <div className="mt-4 space-y-2">
+  <p className="text-xs text-zinc-500">
+    Compare this hash with the <span className="text-cyan-400 font-medium">"Encryption Hash"</span> column on the Transactions page.
+  </p>
+  <p className="text-xs text-zinc-500">
+    ✅ Hash matches = wallet, amount, and salt <span className="text-green-400 font-medium">are correct</span>
+  </p>
+  <p className="text-xs text-zinc-500">
+    ❌ Hash does not match = wallet, amount, or salt <span className="text-red-400 font-medium">are incorrect</span> — please try again
+  </p>
+</div>
+
               </div>
             </div>
           )}

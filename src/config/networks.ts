@@ -44,7 +44,8 @@ export const NETWORKS: Record<NetworkKey, NetworkConfig> = {
     isTestnet: false,
     usdcAddress: "0x3600000000000000000000000000000000000000",
     // Ganti ini setelah deploy contract ke mainnet
-    payrollContractAddress: "0x0000000000000000000000000000000000000000",
+    payrollContractAddress: "0x32FF1840EAb8BBfc3a22C7824C62e919534a3a6e",
+
   },
 };
 

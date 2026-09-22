@@ -13,8 +13,13 @@ import {
   ExternalLink, 
   ShieldCheck,
   Loader2,
-  RefreshCcw
+  RefreshCcw,
+  AlertTriangle,
+  Globe,
+  KeyRound
 } from "lucide-react";
+import { getAllSalts, deleteSalt } from "@/utils/saltStorage";
+
 
 export default function SettingsPage() {
   const { contract, isConnected, disconnectWallet, currentNetwork, business } = useWallet();
@@ -30,7 +35,7 @@ if (isConnected && !business) {
       <div className="p-6 rounded-2xl bg-orange-500/10 border border-orange-500/20 max-w-sm w-full">
         <p className="text-orange-400 font-bold text-lg">Business Not Yet Registered</p>
         <p className="text-zinc-500 text-sm mt-2">
-          Register your business at <span className="text-zinc-300 font-medium">{currentNetwork?.label ?? "jaringan ini"}</span> terlebih dahulu untuk mengakses halaman ini.
+          Register your business at <span className="text-zinc-300 font-medium">{currentNetwork?.label ?? "this network"}</span> first to access this page.
         </p>
         <a href="/" className="inline-block mt-4 px-6 py-2.5 bg-cyan-500 text-zinc-950 font-bold rounded-xl text-sm hover:bg-cyan-400 transition-all">
           Register Business
@@ -182,12 +187,26 @@ if (isConnected && !business) {
               <h3 className="text-lg font-bold text-zinc-100">Network Info</h3>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-zinc-500">Chain ID</span>
-                <span className="text-zinc-200 font-mono">{currentNetwork?.chainId ?? "-"}</span>
+ <div className="space-y-4">
+  <div className="flex justify-between items-center text-sm">
+    <span className="text-zinc-500">Network</span>
+    <span className={`font-bold text-xs px-2 py-0.5 rounded-md ${
+      currentNetwork?.isTestnet
+        ? "bg-yellow-500/15 text-yellow-400"
+        : "bg-cyan-500/15 text-cyan-400"
+    }`}>
+      {currentNetwork?.label ?? "-"}
+    </span>
+  </div>
+  <div className="flex justify-between items-center text-sm">
+    <span className="text-zinc-500">Chain ID</span>
+    <span className="text-zinc-200 font-mono">{currentNetwork?.chainId ?? "-"}</span>
+  </div>
+  <div className="flex justify-between items-center text-sm">
+    <span className="text-zinc-500">RPC URL</span>
+    <span className="text-zinc-500 font-mono text-xs truncate max-w-[140px]">{currentNetwork?.rpcUrl ?? "-"}</span>
+  </div>
 
-              </div>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-zinc-500">Currency</span>
                 <span className="text-zinc-200">USDC {currentNetwork?.isTestnet ? "(Testnet)" : "(Mainnet)"}</span>
@@ -202,20 +221,60 @@ if (isConnected && !business) {
             </div>
           </div>
 
-          {/* Danger Zone */}
-          <div className="glass-panel rounded-2xl p-8 border border-red-500/10">
-            <h3 className="text-lg font-bold text-red-500 mb-4">Danger Zone</h3>
-            <p className="text-sm text-zinc-500 mb-6 leading-relaxed">
-              Clearing the local cache will remove your connection history. You will need to reconnect MetaMask manually.
-            </p>
-            <button 
-              onClick={clearCache}
-              className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-3 rounded-xl transition-all font-bold"
-            >
-              <Trash2 size={18} />
-              Clear Browser Session
-            </button>
-          </div>
+   {/* Danger Zone */}
+<div className="glass-panel rounded-2xl p-8 border border-red-500/10 space-y-4">
+  <h3 className="text-lg font-bold text-red-500">Danger Zone</h3>
+
+  {/* Warning kalau di Mainnet */}
+  {currentNetwork && !currentNetwork.isTestnet && (
+    <div className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-start gap-2">
+      <AlertTriangle size={14} className="text-orange-400 flex-shrink-0 mt-0.5" />
+      <p className="text-xs text-orange-400">
+        You are at <span className="font-bold">{currentNetwork.label}</span>. 
+        Actions below only affect local browser data, not data on the blockchain.
+      </p>
+    </div>
+  )}
+
+  {/* Clear session */}
+  <div>
+    <p className="text-sm text-zinc-500 mb-3 leading-relaxed">
+      Delete browser connection history. You will need to manually reconnect MetaMask after this.
+    </p>
+    <button 
+      onClick={clearCache}
+      className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-3 rounded-xl transition-all font-bold"
+    >
+      <Trash2 size={18} />
+      Clear Browser Session
+    </button>
+  </div>
+
+  {/* Hapus semua backup salt */}
+  <div>
+    <p className="text-sm text-zinc-500 mb-3 leading-relaxed flex items-start gap-1.5">
+      <KeyRound size={13} className="text-amber-400 flex-shrink-0 mt-0.5" />
+      Delete all backup Secret Salt stored in this browser. 
+      Old transactions cannot be verified again after this.
+    </p>
+    <button 
+      onClick={() => {
+        const count = getAllSalts().length;
+        if (count === 0) { alert("No salt backups found."); return; }
+        if (confirm(`Delete ${count} salt backups from this browser? This action cannot be undone.`)) {
+          localStorage.removeItem("vitpay_salts");
+          alert("✅ All salt backups were successfully deleted.");
+        }
+      }}
+      className="w-full flex items-center justify-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/20 py-3 rounded-xl transition-all font-bold"
+    >
+      <KeyRound size={18} />
+      Delete All Salt Backups
+    </button>
+  </div>
+
+</div>
+
 
         </div>
 

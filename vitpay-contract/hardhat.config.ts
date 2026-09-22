@@ -23,7 +23,18 @@ const config: HardhatUserConfig = {
         ? [process.env.PRIVATE_KEY]
         : [],
     },
+
+    arcMainnet: {
+  type: "http",
+  url: "https://rpc.mainnet.arc.io",   // <-- .io bukan .network
+  chainId: 5042,
+  accounts: process.env.PRIVATE_KEY
+    ? [process.env.PRIVATE_KEY]
+    : [],
+},
+  
   },
+
 
   plugins: [toolbox],
 };
